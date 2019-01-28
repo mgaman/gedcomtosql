@@ -19,19 +19,17 @@ class Individual {
 	public int parentFamily;
 	public List ownFamily = new ArrayList();
 	public String gender;
-	public List comments = new ArrayList();
+	public String comment; 
 	public enum eDP {UNKNOWN,BIRTH,DEATH};
 	public eDP addingTo = eDP.UNKNOWN;  // which field DATE/PLAC refers to
 	public void clear()
 	{
 		ref = 0;
-		preNames = familyName = birthDate = birthPlace = deathDate = deathPlace = null;
+		preNames = familyName = birthDate = birthPlace = deathDate = deathPlace = comment = null;
 		parentFamily = 0;
 //		ownFamily = new ArrayList();
 		ownFamily.clear();
 		gender = null;
-//		comments = new ArrayList();
-		comments.clear();
 		addingTo = eDP.UNKNOWN;
 	}
 }
@@ -46,11 +44,12 @@ class Family {
 	public String marriagePlace;
 	public String divorceDate;
 	public String divorcePlace;	
+	public String comment;
 	public enum eDP {UNKNOWN,MARRIAGE,DIVORCE};
 	public eDP addingTo = eDP.UNKNOWN;  // which field DATE/PLAC refers to
 	public void clear() {
 		ref = father = mother = relationship = 0;
-		marriageDate = marriagePlace = divorceDate = divorcePlace = null;
+		marriageDate = marriagePlace = divorceDate = divorcePlace = comment = null;
 		children.clear();
 		addingTo = eDP.UNKNOWN;
 	}
@@ -66,6 +65,7 @@ public class GedcomToSQL {
 	static eTypes type = eTypes.UNSET;
 	static int lineNumber = 0;
 	
+	// statistics for sanity checking
 	static int indivCount = 0;
 	static int indivLines = 0;
 	static int famCount = 0;
@@ -177,16 +177,18 @@ public class GedcomToSQL {
 		else
 			middle += addQuotes(ListToCSV(currentIndividual.ownFamily)) + ",";
 		middle += addQuotes(currentIndividual.gender) + ",";
-		if (currentIndividual.comments.isEmpty())
+		if (currentIndividual.comment == null)
 			middle += "NULL";
 		else
-			middle += addQuotes(ListToCSV(currentIndividual.comments));
+			middle += addQuotes(escapeQuotes(currentIndividual.comment));
 		String sql = prefix + middle + suffix;
 		try {
 			stmt.execute(sql);
 		} catch (SQLException e) {
 			sqlerrors++;
             System.out.println(e.getMessage());
+            System.out.println(sql);
+            
         }
 
 /*		String sql = "Insert into Individual Values (?,?,?,?,?,?,?,?,?,?,?)";
@@ -228,7 +230,7 @@ public class GedcomToSQL {
 			if (top)
 			{
 				if (indivPending)
-					emitIndividual();
+				  emitIndividual();
 				if (famPending)
 					emitFamily();
 				trlrCount++;
@@ -282,7 +284,9 @@ public class GedcomToSQL {
 	1 CHIL @I18@ 
 	1 MARR 
 	2 DATE 12 AUG 1906
-	2 PLAC Bevis Marks   */
+	2 PLAC Bevis Marks
+	2 NOTE blah
+*/
 	private static void addToFam(String s) {
 		int br = s.indexOf(' ');
 		String rs = s.substring(br+1);
@@ -343,6 +347,8 @@ public class GedcomToSQL {
 		}
 		else if (rs.startsWith("NOTE"))
 		{
+			String rest = rs.substring(5);  // skip over PLAC 
+			currentFamily.comment = rest;
 		}
 		else if (rs.startsWith("PFAM"))
 		{
@@ -368,13 +374,15 @@ public class GedcomToSQL {
 		middle += addQuotes(escapeQuotes(currentFamily.marriageDate)) + ",";
 		middle += addQuotes(escapeQuotes(currentFamily.marriagePlace)) + ",";
 		middle += addQuotes(escapeQuotes(currentFamily.divorceDate)) + ",";
-		middle += addQuotes(escapeQuotes(currentFamily.divorcePlace));
+		middle += addQuotes(escapeQuotes(currentFamily.divorcePlace))+ ",";
+		middle += addQuotes(escapeQuotes(currentFamily.comment));
 		String sql = prefix + middle + suffix;
 		try {
 			stmt.execute(sql);
 		} catch (SQLException e) {
 			sqlerrors++;
             System.out.println(e.getMessage());
+            System.out.println(sql);
         }
 		
 	}
@@ -393,13 +401,18 @@ public class GedcomToSQL {
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			System.exit(0);
 		}
-/*
+
  		try {
 			stmt.execute("Delete from Individual;");
 		} catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-*/
+ 		try {
+			stmt.execute("Delete from Family;");
+		} catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
 		try {
 			FileInputStream fstream = new FileInputStream("src/Data/transfer.ged");
 			// Get the object of DataInputStream
@@ -494,11 +507,12 @@ public class GedcomToSQL {
 		}
 		else if (rest.startsWith("NOTE")) {
 			String note = rest.substring(rest.indexOf(" ")+1);	
-			currentIndividual.comments.add(note);
+			currentIndividual.comment = note;
 		}
+		// CONT is a continuation of NOTE
 		else if (rest.startsWith("CONT")) {
 			String cont = rest.substring(rest.indexOf(" ")+1);	
-			currentIndividual.comments.add(cont);			
+			currentIndividual.comment += cont;			
 		}
 		else if (rest.startsWith("SEX")) {
 			String sex = rest.substring(rest.indexOf(" ")+1);	
