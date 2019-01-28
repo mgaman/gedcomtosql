@@ -18,7 +18,7 @@
 2 CONT 24/10/1966 Have birth certificate 'n all
 0 @I2@ INDI
 1 REFN 2
-1 NAME Sandra/Jones/
+1 NAME Sandra/Veissid/
 1 SEX F
 1 BIRT 
 2 DATE 30 SEP 1944
@@ -28,7 +28,7 @@
 1 NOTE SNUS: Y\ have birth certificate 
 0 @I3@ INDI
 1 REFN 3
-1 NAME Sarah /Smith/
+1 NAME Sarah /Weiss/
 1 SEX F
 1 BIRT 
 2 DATE 12 JAN 1968
@@ -38,7 +38,7 @@
 1 NOTE SNUS: Y\ Have birth certificate 
 0 @I4@ INDI
 1 REFN 4
-1 NAME Isaac/Jones/
+1 NAME Isaac/Weissid/
 1 SEX M
 1 BIRT 
 2 DATE 17 DEC 1917
@@ -132,7 +132,7 @@
 1 NOTE Musician\ PFAM: 
 0 @I12@ INDI
 1 REFN 12
-1 NAME Joseph/Jones/
+1 NAME Joseph/Wise/
 1 SEX M
 1 NOTE Carpet repairer 
 0 @I13@ INDI
@@ -217,7 +217,28 @@
 2 PLAC Stoke Newington       
 1 FAMC @F6@ 
 1 FAMS @F14@ 
+1 NOTE BIRTH: PLAC Stoke Newington, like higgins? 
+0 @I21@ INDI
+1 REFN 21
+1 NAME Hyman/Higins/
+1 SEX M
+1 BIRT 
+2 DATE 5 OCT 1915
+2 PLAC Stoke Newington       
+1 FAMC @F6@ 
+1 FAMS @F14@ 
 1 NOTE BIRTH: PLAC Stoke Newington 
+0 @I22@ INDI
+1 REFN 22
+1 NAME Hyman/Jaquson/
+1 SEX M
+1 BIRT 
+2 DATE 5 OCT 1915
+2 PLAC Stoke Newington       
+1 FAMC @F6@ 
+1 FAMS @F14@ 
+1 NOTE BIRTH: PLAC Stoke Newington 
+
 0 @F1@ FAM 
 1 HUSB @I1@ 
 1 WIFE @I2@ 

@@ -80,7 +80,13 @@ public class GedcomToSQL {
 	static boolean famPending = false;
 	static Individual currentIndividual = new Individual();
 	static Family currentFamily = new Family();
-	
+	/**
+	 * Connect to the database.
+	 * Open source gedcom file.
+	 * Read and process the file line by line
+	 * Close all and print out statistics
+	 * @param args
+	 */
 	public static void main(String[] args) {
 	//	String x = escapeQuotes("See Philip Afia's notes. Camille hid in a boarded up room during WW2 in ");
 	//	x = escapeQuotes("bbc'v'b''ddd");
@@ -108,7 +114,7 @@ public class GedcomToSQL {
         }
 
 		try {
-			FileInputStream fstream = new FileInputStream("src/Data/transfershort.ged");
+			FileInputStream fstream = new FileInputStream("src/Data/transfer.ged");
 			// Get the object of DataInputStream
 			DataInputStream in = new DataInputStream(fstream);
 			BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -136,7 +142,12 @@ public class GedcomToSQL {
 		System.out.println(famErrors + " family unprocessed");
 		System.out.println(indErrors + " indiv untreated");
 	}
-
+	/**
+	 * Add quotes to strings to be inserted in SQL INSERT command
+	 * @author David Henry
+	 * @param s - String to be quoted
+	 * @return The quoted string
+	 */
 	static private String addQuotes(String s) {
 		return s == null ? "NULL" : "'" + s + "'";
 	}	
@@ -165,21 +176,31 @@ public class GedcomToSQL {
 		}
 		return reply;
 	}
-	static private String ListToCSV(List<Integer> l)
+	/**
+	 * Quick and dirty way to serialize an array of integers to bypass SQLITE lack of
+	 * array support
+	 * @param list
+	 * @return
+	 */
+	static private String ListToCSV(List<Integer> list)
 	{
 		String reply = "";
-		for (int i = 0; i < l.size(); i++) {
-		    reply += l.get(i) + ",";
+		for (int i = 0; i < list.size(); i++) {
+		    reply += list.get(i) + ",";
 		}
 		return escapeQuotes(reply.substring(0,reply.length()-1));   // trim last comma
 	}
-	/*
+	/**
 	 *  We do not know that a record is complete until the reception of a new record with top == true
 	 *  So we just accumulate data until next record comes along, then write out it out.
+	 * 
+	 * @param line - the line of text from the GEDCOM file
+	 * @param gedcomType - Gedcom level 0 tag type relevant to this line
+	 * @param top - True if this line is a level 0 tag, else false 
 	 */
-	public static void processType(String s, eTypes t, boolean top)
+	public static void processType(String line, eTypes gedcomType, boolean top)
 	{
-		switch (t) {
+		switch (gedcomType) {
 		case HEAD:
 			if (top)
 				headCount++;
@@ -216,7 +237,7 @@ public class GedcomToSQL {
 			{
 //				indivLines++;
 				indivPending = true;
-				addToIndividual(s);
+				addToIndividual(line);
 			}
 			break;
 		case FAM:
@@ -232,17 +253,21 @@ public class GedcomToSQL {
 			}
 			// top line contains reference number so must be processed
 			famPending = true;
-			addToFam(s);
+			addToFam(line);
 			break;
 		default:
 			break;
 		}
 	}
-	static void processLine(String s)
+	/**
+	 * First level of parsing for each line from the gedcom file. Looks for a level 0 tag
+	 * @param line
+	 */
+	static void processLine(String line)
 	{
 		// split line at first blank to get level and rest
 		// if level 0 next part(s) is top level type
-		String st = s.trim();
+		String st = line.trim();
 		int br = st.indexOf(" ");
 		if (br > 0)   // last line is CTRL^Z
 		{
@@ -276,6 +301,9 @@ public class GedcomToSQL {
 				processType(st,type, false);
 		}
 	}
+	/**
+	 * Convert the Individual class data to an SQL INSERT command
+	 */
 	private static void emitIndividual()
 	{
 		// Create SQL INSERT, adding all columns so no need to list columns
@@ -329,11 +357,15 @@ public class GedcomToSQL {
 	        }
 */
 	}
-	private static void addToIndividual(String s) {
+	/**
+	 * Parse the INDI data add to the Individual class data
+	 * @param line - line of gedcom data
+	 */
+	private static void addToIndividual(String line) {
 		// split at first space & check next field
 		// cannot split all on space as space also embedded in data e.g. dates, names, places
-		int br = s.indexOf(' ');
-		String rest = s.substring(br + 1); // start past first blank
+		int br = line.indexOf(' ');
+		String rest = line.substring(br + 1); // start past first blank
 //		System.out.println(rest);
 		if (rest.startsWith("REFN"))
 		{
@@ -407,6 +439,9 @@ public class GedcomToSQL {
 		else
 			indErrors++;
 	}
+	/**
+	 * Convert the Family class data to an SQL INSERT command
+	 */
 	private static void emitFamily() {
 		// TODO Auto-generated method stub
 		// Create SQL INSERT, adding all columns so no need to list columns
@@ -436,6 +471,10 @@ public class GedcomToSQL {
         }
 		
 	}
+	/**
+	 * Parse the FAM data add to the Family class data 
+	 * @param s
+	 */
 	private static void addToFam(String s) {
 		int br = s.indexOf(' ');
 		String rs = s.substring(br+1);
