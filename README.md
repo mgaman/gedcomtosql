@@ -8,3 +8,5 @@ I handled all lower level tags that were present in my data. There are more in l
 Choosing a database provider is a bit tricky. I use SQLITE3 for this project but it is not ideal. Its advantage is its' small footprint. It runs as a stand alone entity and there is no need to install or access a server such as mySQL or postgres. Its main disadvantage is lack of features, particularily lack of support for Arrays.
 One needs arrays in the Individual table for multiple families and in the Family table for multiple children.
 My work-around is to record numeric arrays as a comma delimited string.
+
+SQLite supports soundex.
