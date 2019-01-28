@@ -1,0 +1,362 @@
+0 HEAD
+1 HCNT 1502 
+1 SOUR FHS
+1 DEST PAF 2.1
+1 DATE 23 JAN 2019 
+1 FILE TRANSFER.GED
+0 @S1@ SUBM
+0 @I1@ INDI
+1 REFN 1
+1 NAME Derek David/O'Smith/
+1 SEX M
+1 BIRT 
+2 DATE 2 MAR 1943
+2 PLAC Isleworth,Mddx.       
+1 FAMC @F5@ 
+1 FAMS @F1@ 
+1 NOTE SNUS: Y\ BIRTH: TIME 0210\ Have Ketuba 'n Marriage certificate, civil wedding 
+2 CONT 24/10/1966 Have birth certificate 'n all
+0 @I2@ INDI
+1 REFN 2
+1 NAME Sandra/Jones/
+1 SEX F
+1 BIRT 
+2 DATE 30 SEP 1944
+2 PLAC Manchester,Lancs      
+1 FAMC @F3@ 
+1 FAMS @F1@ 
+1 NOTE SNUS: Y\ have birth certificate 
+0 @I3@ INDI
+1 REFN 3
+1 NAME Sarah /Smith/
+1 SEX F
+1 BIRT 
+2 DATE 12 JAN 1968
+2 PLAC Derby,Derby           
+1 FAMC @F1@ 
+1 FAMS @F2@ 
+1 NOTE SNUS: Y\ Have birth certificate 
+0 @I4@ INDI
+1 REFN 4
+1 NAME Isaac/Jones/
+1 SEX M
+1 BIRT 
+2 DATE 17 DEC 1917
+2 PLAC Manchester,Lancs      
+1 DEAT 
+2 DATE 1 JUN 1986
+2 PLAC Manchester            
+1 FAMC @F32@ 
+1 FAMS @F3@ 
+1 NOTE SNUS: Y\ DEATH: PLAC Manchester\ Death certificate\ MARRIAGE: PLAC 
+2 CONT Manchester 
+0 @I5@ INDI
+1 REFN 5
+1 NAME Jan/Smith/
+1 SEX F
+1 BIRT 
+2 DATE 2 SEP 1969
+2 PLAC Derby,Derby           
+1 FAMC @F1@ 
+1 FAMS @F4@ 
+1 NOTE SNUS: Y\ Have birth certificate 
+0 @I6@ INDI
+1 REFN 6
+1 NAME Frieda/Clinton/
+1 SEX F
+1 BIRT 
+2 DATE 23 NOV 1915
+2 PLAC Spitalfields,London   
+1 FAMC @F34@ 
+1 FAMS @F3@ 
+1 NOTE SNUS: Y 
+0 @I7@ INDI
+1 REFN 7
+1 NAME Joe/Smith/
+1 SEX M
+1 BIRT 
+2 DATE 17 JUN 1896
+2 PLAC Capetown,RSA          
+1 DEAT 
+2 DATE APR 1970
+2 PLAC Westcliff,Essex       
+1 FAMC @F20@ 
+1 FAMS @F5@ 
+1 NOTE SNUS: Y\ MARRIAGE: PLAC Spanish & Portugese, L 
+0 @I8@ INDI
+1 REFN 8
+1 NAME Clara/Higgins/
+1 SEX F
+1 BIRT 
+2 DATE 28 JUN 1907
+2 PLAC Stoke Newington,London
+1 DEAT 
+2 DATE 23 JUL 1986
+2 PLAC Isleworth,Mddx        
+1 FAMC @F6@ 
+1 FAMS @F5@ 
+1 NOTE SNUS: Y\ Have death certificate 
+0 @I9@ INDI
+1 REFN 9
+1 NAME Solomon/Higgins/
+1 SEX M
+1 BIRT 
+2 DATE 1882
+2 PLAC Turkey                
+1 DEAT 
+2 DATE 5 JAN 1967
+2 PLAC Chiswick,London       
+1 FAMC @F8@ 
+1 FAMS @F6@ 
+1 NOTE BIRTH: PLAC Turkey\ Have Ketuba from Bevis Marks and marriage certificate. 
+2 CONT Photo of shop in shelter. Wedding photo from Bevis Marks 1907 with many 
+2 CONT names & faces.\ MARRIAGE: PLAC Bevis Marks 
+0 @I10@ INDI
+1 REFN 10
+1 NAME Sarah/Jackson/
+1 SEX F
+1 BIRT 
+2 DATE 1884
+2 PLAC Salonika              
+1 DEAT 
+2 DATE 1945
+1 FAMC @F176@ 
+1 FAMS @F6@ 
+1 NOTE SNUS: Y\ BIRTH: PLAC Salonika 
+0 @I11@ INDI
+1 REFN 11
+1 NAME Haim/Higgins/
+1 SEX M
+1 FAMS @F8@ 
+1 FAMS @F7@ 
+1 NOTE Musician\ PFAM: 
+0 @I12@ INDI
+1 REFN 12
+1 NAME Joseph/Jones/
+1 SEX M
+1 NOTE Carpet repairer 
+0 @I13@ INDI
+1 REFN 13
+1 NAME Yvonne Naomi/Smith/
+1 SEX F
+1 BIRT 
+2 DATE 9 MAY 1939
+2 PLAC Hammersmith Hosp      
+1 FAMC @F5@ 
+1 FAMS @F9@ 
+1 NOTE SNUS: Y\ BIRTH: PLAC Hammersmith Hospital 
+0 @I14@ INDI
+1 REFN 14
+1 NAME Ronald/Trump/
+1 SEX M
+1 BIRT 
+2 DATE 4 AUG 1943
+2 PLAC Colorado              
+1 DEAT 
+2 DATE 14 MAY 2010
+2 PLAC Los Angeles CA        
+1 FAMC @F400@ 
+1 FAMS @F9@ 
+0 @I15@ INDI
+1 REFN 15
+1 NAME Ian/Trump/
+1 SEX M
+1 BIRT 
+2 DATE 6 AUG 1970
+2 PLAC Los Angeles           
+1 FAMC @F9@ 
+1 FAMS @F11@ 
+1 FAMS @F10@ 
+1 NOTE SNUS: Y\ BIRTH: PLAC Los Angeles\ MARRIAGE: PLAC Fort McArthur AFB, CA 
+0 @I16@ INDI
+1 REFN 16
+1 NAME Sarah/Trump/
+1 SEX F
+1 BIRT 
+2 DATE 16 JAN 1974
+2 PLAC Los Angeles           
+1 FAMC @F9@ 
+1 FAMS @F12@ 
+1 NOTE SNUS: Y\ BIRTH: PLAC Los Angeles 
+0 @I17@ INDI
+1 REFN 17
+1 NAME Amy/Trump/
+1 SEX F
+1 BIRT 
+2 DATE 16 MAY 1976
+2 PLAC Los Angeles           
+1 FAMC @F9@ 
+1 FAMS @F552@ 
+1 NOTE SNUS: Y\ BIRTH: PLAC Los Angeles 
+0 @I18@ INDI
+1 REFN 18
+1 NAME Jennifer/Higgins/
+1 SEX F
+1 BIRT 
+2 DATE 10 JUN 1919
+2 PLAC London                
+1 FAMC @F6@ 
+1 FAMS @F13@ 
+1 NOTE BIRTH: PLAC London 
+0 @I19@ INDI
+1 REFN 19
+1 NAME Wolf/Packer/
+1 SEX M
+1 BIRT 
+2 DATE 14 JAN 1917
+2 PLAC London                
+1 FAMC @F378@ 
+1 FAMS @F13@ 
+1 NOTE BIRTH: PLAC London 
+0 @I20@ INDI
+1 REFN 20
+1 NAME Hyman/Higgins/
+1 SEX M
+1 BIRT 
+2 DATE 5 OCT 1915
+2 PLAC Stoke Newington       
+1 FAMC @F6@ 
+1 FAMS @F14@ 
+1 NOTE BIRTH: PLAC Stoke Newington 
+0 @F1@ FAM 
+1 HUSB @I1@ 
+1 WIFE @I2@ 
+1 CHIL @I3@ 
+1 CHIL @I5@ 
+1 MARR 
+2 DATE 19 MAR 1967
+2 PLAC Holy Law,Manchester   
+0 @F2@ FAM 
+1 HUSB @I377@ 
+1 WIFE @I3@ 
+1 CHIL @I879@ 
+1 CHIL @I1119@ 
+1 MARR 
+2 DATE 26 AUG 1993
+2 PLAC Kibbutz HaHoteri      
+0 @F3@ FAM 
+1 HUSB @I4@ 
+1 WIFE @I6@ 
+1 CHIL @I57@ 
+1 CHIL @I2@ 
+1 CHIL @I58@ 
+1 MARR 
+2 DATE 18 AUG 1940
+2 PLAC Manchester            
+0 @F4@ FAM 
+1 HUSB @I904@ 
+1 WIFE @I5@ 
+1 CHIL @I1122@ 
+1 CHIL @I1165@ 
+1 CHIL @I1474@ 
+1 MARR 
+2 DATE 28 MAY 1998
+2 PLAC Kibbutz HaKovesh      
+0 @F5@ FAM 
+1 HUSB @I7@ 
+1 WIFE @I8@ 
+1 CHIL @I13@ 
+1 CHIL @I1@ 
+1 MARR 
+2 DATE 21 JUN 1938
+2 PLAC Spanish & Portug,L    
+0 @F6@ FAM 
+1 HUSB @I9@ 
+1 WIFE @I10@ 
+1 CHIL @I8@ 
+1 CHIL @I20@ 
+1 CHIL @I18@ 
+1 MARR 
+2 DATE 12 AUG 1906
+2 PLAC Bevis Marks           
+0 @F7@ FAM 
+1 HUSB @I11@ 
+0 @F8@ FAM 
+1 HUSB @I11@ 
+1 WIFE @I194@ 
+1 CHIL @I205@ 
+1 CHIL @I208@ 
+1 CHIL @I195@ 
+1 CHIL @I197@ 
+1 CHIL @I199@ 
+1 CHIL @I201@ 
+1 CHIL @I9@ 
+1 CHIL @I203@ 
+0 @F9@ FAM 
+1 HUSB @I14@ 
+1 WIFE @I13@ 
+1 CHIL @I15@ 
+1 CHIL @I16@ 
+1 CHIL @I17@ 
+0 @F10@ FAM 
+1 HUSB @I15@ 
+1 WIFE @I1495@ 
+1 MARR 
+2 DATE 12 JUN 2010
+2 PLAC Galena KA             
+0 @F11@ FAM 
+1 HUSB @I15@ 
+1 WIFE @I800@ 
+1 CHIL @I801@ 
+1 CHIL @I938@ 
+1 MARR 
+2 DATE 18 SEP 1994
+2 PLAC Fort McArthur AF,CA   
+0 @F12@ FAM 
+1 HUSB @I1476@ 
+1 WIFE @I16@ 
+1 CHIL @I1477@ 
+1 MARR 
+2 DATE 12 MAY 2002
+2 PLAC Maui, Hawaii          
+0 @F13@ FAM 
+1 HUSB @I19@ 
+1 WIFE @I18@ 
+1 CHIL @I22@ 
+1 CHIL @I23@ 
+0 @F14@ FAM 
+1 HUSB @I20@ 
+1 WIFE @I21@ 
+1 CHIL @I24@ 
+1 CHIL @I25@ 
+0 @F15@ FAM 
+1 HUSB @I880@ 
+1 WIFE @I22@ 
+1 CHIL @I156@ 
+0 @F16@ FAM 
+1 HUSB @I651@ 
+1 WIFE @I22@ 
+0 @F17@ FAM 
+1 HUSB @I353@ 
+1 WIFE @I22@ 
+1 CHIL @I885@ 
+1 MARR 
+2 DATE 13 OCT 1992
+2 PLAC Solothurn,Switzerland 
+2 NOTE Just me 'n you
+0 @F18@ FAM 
+1 HUSB @I24@ 
+1 WIFE @I1079@ 
+1 CHIL @I157@ 
+1 CHIL @I158@ 
+1 CHIL @I159@ 
+1 MARR 
+2 DATE 26 MAY 1973
+2 PLAC Leicester             
+0 @F19@ FAM 
+1 HUSB @I160@ 
+1 WIFE @I25@ 
+1 CHIL @I161@ 
+1 CHIL @I162@ 
+0 @F20@ FAM 
+1 HUSB @I26@ 
+1 WIFE @I27@ 
+1 CHIL @I47@ 
+1 CHIL @I30@ 
+1 CHIL @I7@ 
+1 CHIL @I41@ 
+1 MARR 
+2 DATE 1 JUL 1891
+2 PLAC Kimberly,RSA          
+0 TRLR
+
