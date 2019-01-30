@@ -61,7 +61,7 @@ public class treeTest {
 		}
 
 		Node<String> root = new Node<>("root");
-		int [] children = getChildren(1,1);  // 1 family, 2 kids
+		int [] children = getChildren(6,1,true);  // 1 family, 2 kids
 //		children = getChildren(879,1);  // no family
 //	    children = getChildren(30,1);  // 1 family, no kids
 //      children = getChildren(55,1);  // 3 families, 1,0,3 kids
@@ -93,7 +93,7 @@ public class treeTest {
 		node.getChildren().forEach(each ->  printTree(each, appender + appender));
 	}
 	
-	private static int[] getChildren(int parent, int depth)
+	private static int[] getChildren(int parent, int depth, boolean recursive)
 	{
 		int [] children = null;
 		List totalChildren = new ArrayList();
@@ -152,6 +152,11 @@ public class treeTest {
 			for (int i=0;i<size;i++)
 				children[i] = (int)totalChildren.remove(0); // take first in queue
 		}
+		if (children != null && recursive)
+		{
+			for (int kid:children)
+				getChildren(kid,depth+1,true);
+		}
 		return children;	
-	}
+	}	
 }
