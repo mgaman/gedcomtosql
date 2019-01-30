@@ -61,15 +61,16 @@ public class treeTest {
 		}
 
 		Node<String> root = new Node<>("root");
-		int [] children = getChildren(6,1,true);  // 1 family, 2 kids
-//		children = getChildren(879,1);  // no family
-//	    children = getChildren(30,1);  // 1 family, no kids
-//      children = getChildren(55,1);  // 3 families, 1,0,3 kids
+//		getDescendants(6,3);  // 1 family,many descendants
+//		getDescendants(879,1);  // no family
+//		getDescendants(30,1);  // 1 family, no kids
+     // getDescendants(55,4);  // 3 families, 1,0,3 kids
+      getAscendants(1403,8);
 //		for (int c: children)
 //			root.addChild(new Node<String>("node " + c));
 		//System.out.println(children);
 		//Node<String> root = createTree();
-		printTree(root, "-");
+		//printTree(root, "-");
 	}
 	private static Node<String> createTree() {
 		Node<String> root = new Node<>("root");
@@ -93,10 +94,49 @@ public class treeTest {
 		node.getChildren().forEach(each ->  printTree(each, appender + appender));
 	}
 	
-	private static int[] getChildren(int parent, int depth, boolean recursive)
+	private static void getAscendants(int person,int maxdepth)
 	{
-		int [] children = null;
-		List totalChildren = new ArrayList();
+		ResultSet Parentset,FatherMotherset;
+		String sql = "Select ParentFamily from Individual where id="+person+";";
+		int father = -1;
+		int mother = -1;
+		try {
+			Statement Pstmt = conn.createStatement();
+			Parentset = Pstmt.executeQuery(sql);
+			// NOTE java.sql.resultset cannot tell you how many rows there are
+			while (Parentset.next())
+			{
+				Statement HWstmt = conn.createStatement();
+				String pfamily = Parentset.getString("ParentFamily");
+				sql = "Select father,mother from family where id=" + pfamily + ";";
+				FatherMotherset = HWstmt.executeQuery(sql);
+				while (FatherMotherset.next())
+				{
+					// get 0 in place of NULL
+					father = FatherMotherset.getInt("Father");
+					mother = FatherMotherset.getInt("Mother");	
+					System.out.println("Depth," + maxdepth + " Person," + person + " Father," + father + " Mother," + mother);
+				}
+				HWstmt.close();
+			}
+			Pstmt.close();
+		}
+		catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		if (--maxdepth == 0)
+			return;
+		if (father > 0)
+			getAscendants(father,maxdepth);	
+		if (mother > 0)
+			getAscendants(mother,maxdepth);	
+		return;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static void getDescendants(int parent, int maxdepth)
+	{
+		List<Integer> totalChildren = new ArrayList<Integer>();
 		ResultSet ownfamilyset,childrenset;
 		String myfamilies = null;
 		String myChildren = null;
@@ -130,7 +170,7 @@ public class treeTest {
 									for (int i=0; i< allChildren.length;i++)
 									{
 										totalChildren.add(Integer.parseInt(allChildren[i]));
-										System.out.println("Level " + depth + " Parent " + parent + ",Child "+ Integer.parseInt(allChildren[i]));
+										System.out.println("Level " + maxdepth + " Parent " + parent + ",Child "+ Integer.parseInt(allChildren[i]));
 									}
 								}
 							}
@@ -145,18 +185,10 @@ public class treeTest {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		if (!totalChildren.isEmpty())
-		{
-			int size = totalChildren.size();
-			children = new int [size];
-			for (int i=0;i<size;i++)
-				children[i] = (int)totalChildren.remove(0); // take first in queue
-		}
-		if (children != null && recursive)
-		{
-			for (int kid:children)
-				getChildren(kid,depth+1,true);
-		}
-		return children;	
+		if (--maxdepth == 0)
+			return;
+		while (!totalChildren.isEmpty())
+			getDescendants((int)totalChildren.remove(0),maxdepth);	
+		return;
 	}	
 }
