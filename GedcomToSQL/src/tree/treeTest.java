@@ -64,8 +64,8 @@ public class treeTest {
 //		getDescendants(6,3);  // 1 family,many descendants
 //		getDescendants(879,1);  // no family
 //		getDescendants(30,1);  // 1 family, no kids
-     // getDescendants(55,4);  // 3 families, 1,0,3 kids
-      getAscendants(1403,8);
+      getDescendants(8,0);  // 3 families, 1,0,3 kids
+      //getAscendants(1,8);
 //		for (int c: children)
 //			root.addChild(new Node<String>("node " + c));
 		//System.out.println(children);
@@ -133,7 +133,6 @@ public class treeTest {
 		return;
 	}
 	
-	@SuppressWarnings("unchecked")
 	private static void getDescendants(int parent, int maxdepth)
 	{
 		List<Integer> totalChildren = new ArrayList<Integer>();
@@ -170,7 +169,7 @@ public class treeTest {
 									for (int i=0; i< allChildren.length;i++)
 									{
 										totalChildren.add(Integer.parseInt(allChildren[i]));
-										System.out.println("Level " + maxdepth + " Parent " + parent + ",Child "+ Integer.parseInt(allChildren[i]));
+										System.out.println(maxdepth + "," + parent + "," + Integer.parseInt(allChildren[i]));
 									}
 								}
 							}
@@ -185,8 +184,9 @@ public class treeTest {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		if (--maxdepth == 0)
-			return;
+	//	if (--maxdepth == 0)
+	//		return;
+		++maxdepth;
 		while (!totalChildren.isEmpty())
 			getDescendants((int)totalChildren.remove(0),maxdepth);	
 		return;

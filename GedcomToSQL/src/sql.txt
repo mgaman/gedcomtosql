@@ -4,6 +4,7 @@ Create table Individual (ID primary key, FamilyName text, Prenames text, Birthda
 Create table Family (ID primary key, father integer, mother integer, relationship integer, children text,  marriageDate text,  marriagePlace text, divorceDate text, divorcePlace text, Comment text);
    
    
+select children from family where id=(select ownfamily from individual where id=1);
    
    
    
