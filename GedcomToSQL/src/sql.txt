@@ -1,10 +1,11 @@
-Create table Individual (ID primary key, FamilyName text, Prenames text, Birthdate text , Birthplace text, 
-  Deathdate text , Deathplace text, ParentFamily integer, OwnFamily text, Gender text, Comment Text);
+Create table Individual (ID integer primary key, FamilyName text, Prenames text, Birthdate text , Birthplace text, Deathdate text , Deathplace text, ParentFamily integer, OwnFamily text, Gender text, Comment Text);
    
-Create table Family (ID primary key, father integer, mother integer, relationship integer, children text,  marriageDate text,  marriagePlace text, divorceDate text, divorcePlace text, Comment text);
+Create table Family (ID integer primary key, father integer, mother integer, relationship integer, children text,  marriageDate text,  marriagePlace text, divorceDate text, divorcePlace text, Comment text);
    
    
 select children from family where id=(select ownfamily from individual where id=1);
    
    
+   // NOTE MUST specify primary key datatype as integer as default is text;
+   // No arrays in sqlite so specify integer arrays as CSV. Could use JSON but that is overkill
    

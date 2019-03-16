@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 class Individual {
-	public int ref = 0;
+	public int ref = 0;  // primary key in table
 	public String familyName;
 	public String preNames;
 	public String birthDate;
@@ -17,7 +17,7 @@ class Individual {
 	public String deathDate;
 	public String deathPlace;
 	public int parentFamily;
-	public List ownFamily = new ArrayList();
+	public List ownFamily = new ArrayList();  // CSV test in table
 	public String gender;
 	public String comment; 
 	public enum eDP {UNKNOWN,BIRTH,DEATH};
@@ -34,11 +34,11 @@ class Individual {
 }
 
 class Family {
-	public int ref;
+	public int ref;   // primary key in table
 	public int father;
 	public int mother;
 	public int relationship;  // 0 unknown, 1 married
-	public List children = new ArrayList();
+	public List children = new ArrayList();  // CSV text in table
 	public String marriageDate;
 	public String marriagePlace;
 	public String divorceDate;
