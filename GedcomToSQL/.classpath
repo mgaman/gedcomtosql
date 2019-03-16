@@ -11,7 +11,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/henryd/Downloads/JavaLib/sqlite-jdbc-3.23.1.jar"/>
+	<classpathentry kind="lib" path="/home/susan/Downloads/JavaLib/sqlite-jdbc-3.23.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
