@@ -30,7 +30,7 @@ public class GetChildren {
 			System.exit(0);
 		}
 		//System.out.println(getChildren(1));
-		getDescendants(1,0);
+		getDescendants(2,0);
 		System.out.println("Total descendants " + descendants);
 		// print count at each level
 		for (int i=0;i<levelsCount.size();i++)

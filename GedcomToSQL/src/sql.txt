@@ -2,7 +2,17 @@ Create table Individual (ID integer primary key, FamilyName text, Prenames text,
    
 Create table Family (ID integer primary key, father integer, mother integer, relationship integer, children text,  marriageDate text,  marriagePlace text, divorceDate text, divorcePlace text, Comment text);
    
-   
+Create table ExtraFiles (Owners text, PathName text, classification integer);
+   classification 0 unknown
+                  1 portrait
+                  2 birth certificate
+                  3 marriage certificate
+                  4 death certificate
+                  5 ketuba
+                  6 gravestone
+                  7 others
+                  
+
 select children from family where id=(select ownfamily from individual where id=1);
    
    
