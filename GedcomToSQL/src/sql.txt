@@ -1,8 +1,8 @@
-Create table Individual (ID integer primary key, FamilyName text, Prenames text, Birthdate text , Birthplace text, Deathdate text , Deathplace text, ParentFamily integer, OwnFamily text, Gender text, Comment Text);
+Create table Individual (ID integer primary key, CurrentFamilyName text, PreviousFamilyNames text, FirstName text, MiddleNames text, Birthdate text , Birthplace text, Deathdate text , Deathplace text, ParentFamily integer, OwnFamily text, Gender text, Comment Text);
    
 Create table Family (ID integer primary key, father integer, mother integer, relationship integer, children text,  marriageDate text,  marriagePlace text, divorceDate text, divorcePlace text, Comment text);
    
-Create table ExtraFiles (Owners text, PathName text, classification integer);
+Create table ExtraFiles (Owner1 integer, Owner2 integer, PathName text, classification integer);
    classification 0 unknown
                   1 portrait
                   2 birth certificate
@@ -18,4 +18,10 @@ select children from family where id=(select ownfamily from individual where id=
    
    // NOTE MUST specify primary key datatype as integer as default is text;
    // No arrays in sqlite so specify integer arrays as CSV. Could use JSON but that is overkill
+   
+   Extrafiles may have up to 2 owners e.g. marriage certificate for both husband and wife
+   
+   Although sqlite3 does not support arrays, it does support the JSON datatype which should work
+   
+   For now have 2 columns, firstname, middlenames and search on firstname
    

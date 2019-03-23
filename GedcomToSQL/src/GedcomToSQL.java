@@ -10,8 +10,10 @@ import java.util.List;
  */
 class Individual {
 	public int ref = 0;  // primary key in table
-	public String familyName;
-	public String preNames;
+	public String currentFamilyName;
+	public List previousFamilyNames = new ArrayList();  // CSV list
+	public String firstName;
+	public List middleNames  = new ArrayList(); // CSV list
 	public String birthDate;
 	public String birthPlace;
 	public String deathDate;
@@ -25,9 +27,11 @@ class Individual {
 	public void clear()
 	{
 		ref = 0;
-		preNames = familyName = birthDate = birthPlace = deathDate = deathPlace = comment = null;
+		firstName = currentFamilyName = birthDate = birthPlace = deathDate = deathPlace = comment = null;
 		parentFamily = 0;
 		ownFamily.clear();
+		previousFamilyNames.clear();
+		middleNames.clear();
 		gender = null;
 		addingTo = eDP.UNKNOWN;
 	}
@@ -311,8 +315,22 @@ public class GedcomToSQL {
 		String suffix = ");";
 		
 		String middle = String.valueOf(currentIndividual.ref) + ",";
-		middle += addQuotes(escapeQuotes(currentIndividual.familyName)) + ",";
-		middle += addQuotes(escapeQuotes(currentIndividual.preNames)) + ",";
+		if (currentIndividual.currentFamilyName.length()==0)
+			middle += "NULL,";
+		else
+			middle += addQuotes(escapeQuotes(currentIndividual.currentFamilyName)) + ",";
+		if (currentIndividual.previousFamilyNames.isEmpty())
+			middle += "NULL,";
+		else
+			middle += addQuotes(escapeQuotes(ListToCSV(currentIndividual.previousFamilyNames))) + ",";
+		if (currentIndividual.firstName.length()==0)
+			middle += "NULL,";
+		else
+			middle += addQuotes(escapeQuotes(currentIndividual.firstName)) + ",";
+		if (currentIndividual.middleNames.isEmpty())
+			middle += "NULL,";
+		else
+			middle += addQuotes(escapeQuotes(ListToCSV(currentIndividual.middleNames))) + ",";
 		middle += addQuotes(escapeQuotes(currentIndividual.birthDate)) + ",";
 		middle += addQuotes(escapeQuotes(currentIndividual.birthPlace)) + ",";
 		middle += addQuotes(escapeQuotes(currentIndividual.deathDate)) + ",";
@@ -376,9 +394,36 @@ public class GedcomToSQL {
 		else if (rest.startsWith("NAME")) {
 			String name = rest.substring(rest.indexOf(" ")+1);
 			String [] names = name.split("/");
-			currentIndividual.preNames = names[0];
+			// split firstname into firstname/middlenames
+			String [] fnames = names[0].split(" ");
+			// if field empty set both firstname and middlenames to empty
+			if (fnames.length > 0)
+			{
+				currentIndividual.firstName = fnames[0];
+				if (fnames.length>1)
+				{
+					for (int i=1;i<fnames.length;i++)
+						currentIndividual.middleNames.add(fnames[i]);
+				}
+			}
+			else
+			{
+				currentIndividual.firstName = "";
+			}
 			if (names.length > 1)
-				currentIndividual.familyName = names[1];
+			{
+				// GEDCOM doesnt allow for previous names so I put them in ()
+				// here I split them up into current and previous names
+				if (!names[1].contains("("))
+						currentIndividual.currentFamilyName = names[1];
+				else
+				{
+					String [] pnames = names[1].split("\\(");
+					currentIndividual.currentFamilyName = pnames[0].trim();
+					// ( not always closed by )
+					currentIndividual.previousFamilyNames.add(pnames[1].trim());
+				}
+			}
 		}
 		else if (rest.startsWith("BIRT")) {
 			currentIndividual.addingTo = Individual.eDP.BIRTH;

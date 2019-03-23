@@ -1,0 +1,9 @@
+Create database and tables offline using sql.txt
+Gedcom doesn't allow for old/new names. 
+Individuals now have CurrentFamilyName and array of PreviousFamilyNames
+All other binary files e.g. pictures, scanned docs etc kept in one table with pointers to file pathname
+
+Sql soundex problem prename 'maurice' can match against soundex('morris') BUT
+              prename 'maurice joseph' fails against soundex('morris')
+              
+Need to create a split function split(string,delimiter) - need to do this in php
