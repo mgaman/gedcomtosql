@@ -1,0 +1,25 @@
+This incorporates arrays implemented as JSON objects.
+MySQL has builtin support for JSON whereas Sqlite3 implements via a loadable library. Both do the job.
+MySQL will handle multiple simulataneous whereas Sqlite3 cannot.
+
+Forenames are now treated as an array
+FamilyName is the one on the birth certificate, OtherFamilyNames can be wifes married name, anglicisation etc.
+ 
+Create table Individual (ID integer primary key,
+	BirthFamilyName text, OtherFamilyNames JSON, ForeNames JSON, -- arrays of latin text
+    Birthdate DATE , Birthplace text,
+    Deathdate DATE , Deathplace text,
+    ParentFamily integer, 
+    Relationships JSON, -- integer array of indices to Family table
+    Gender ENUM ('male','female','other') , Comment Text);
+
+Create table Family (ID integer primary key, father integer, mother integer, 
+  relationship ENUM ('Married','Divorced','Other'),
+  children JSON, -- index of indices to Individual table
+  marriageDate DATE, marriagePlace text,
+  divorceDate DATE, divorcePlace text, Comment text);
+   
+Create table ExtraFiles (Owners JSON, -- e.g. marriage certificate for both husband and wife
+   PathName text,
+   classification ENUM ('unknown','portrait','birthcertificate','marriagecertificate',
+   	'deathcertificate','ketuba','gravestone','others');   
