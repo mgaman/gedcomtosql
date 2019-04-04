@@ -22,4 +22,4 @@ Create table Family (ID integer primary key, father integer, mother integer,
 Create table ExtraFiles (Owners JSON, -- e.g. marriage certificate for both husband and wife
    PathName text,
    classification ENUM ('unknown','portrait','birthcertificate','marriagecertificate',
-   	'deathcertificate','ketuba','gravestone','others');   
+   	'deathcertificate','ketuba','gravestone','others');
