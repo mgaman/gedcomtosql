@@ -1,3 +1,11 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GedcomProcessor {
 
@@ -18,7 +26,67 @@ public class GedcomProcessor {
 	 boolean famPending = false;
 	 Individual currentIndividual = new Individual();
 	 Family currentFamily = new Family();
-
+	 List<String> Months;
+	 
+	 genericSQLhandler sqlHandler;
+	 
+	 public GedcomProcessor(genericSQLhandler gsh)  // constructor
+	 {
+		 sqlHandler = gsh;
+		 try {
+			 sqlHandler.connectMySQL();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+	 
+	 private String gedcomToSqlDate(String gcdate) {
+			List<String> Months = new ArrayList<String>();
+			Months.add("JAN");
+			Months.add("FEB");
+			Months.add("MAR");
+			Months.add("APR");
+			Months.add("MAY");
+			Months.add("JUN");
+			Months.add("JUL");
+			Months.add("AUG");
+			Months.add("SEP");
+			Months.add("OCT");
+			Months.add("NOV");
+			Months.add("DEC");
+		String [] parts = gcdate.split(" ");
+		// Many variants, nothing, year only, d/mm/y  where mm is 3 letter code
+		// convert to SQL yyyy-mm-dd
+		String month = "1";
+		String day = "1";
+		String year = "";
+		int mm;
+		switch (parts.length)
+		{
+			case 1:   // year only
+				year = parts[0];
+				break;
+			case 2:   // month + year
+				year = parts[1];
+				mm = 1;
+				if (Months.contains(parts[0])) {
+					mm = (Months.indexOf(parts[0]) + 1);
+				}
+				month = String.format("%d", mm);
+				break;
+			case 3:  // day + month + year
+				mm = 1;
+				if (Months.contains(parts[1])) {
+					mm = (Months.indexOf(parts[1]) + 1);
+				}
+				month = String.format("%d", mm);
+				day = parts[0];
+				year = parts[2];
+				break;
+		}
+		return String.format("%s-%s-%s", year,month,day);
+	 }
 	/**
 	 * First level of parsing for each line from the gedcom file. Looks for a level 0 tag
 	 * @param line
@@ -257,7 +325,7 @@ public class GedcomProcessor {
 		}
 		else if (rs.startsWith("MARR"))
 		{
-			currentFamily.relationship = Family.eRL.MARRIED;
+			currentFamily.relationship = Family.eRL.Married;
 			currentFamily.addingTo = Family.eDP.MARRIAGE;
 		}
 		else if (rs.startsWith("DATE"))
@@ -311,5 +379,53 @@ public class GedcomProcessor {
 	}
 	
 	void emitIndividual() {}
-	void emitFamily() {}
+	/*
+	 *  All JSON stuff here is just Json Array so we can make the string ourselves and insert that
+	 */
+	void emitFamily()
+	{
+	    PreparedStatement preparedStatement = null;
+	    System.out.println(String.format("Family: %d",currentFamily.ref));
+	    String temp;
+        try {
+			preparedStatement = sqlHandler.connect.prepareStatement
+			        ("insert into Family values (?,?,?,?,?,?,?,?,?,?)");
+			preparedStatement.setInt(1, currentFamily.ref);
+			preparedStatement.setInt(2, currentFamily.father);
+			preparedStatement.setInt(3, currentFamily.mother);
+			preparedStatement.setString(4,"Married") ;
+			if (currentFamily.children.size() == 0)
+			{
+				preparedStatement.setNull(5, Types.VARCHAR);
+			}
+			else {
+				temp = "[";
+				for (int i=0; i<currentFamily.children.size();i++) {
+					temp += currentFamily.children.get(i) + ",";
+					}
+				temp = temp.substring(0,temp.length()-1) + "]";
+//				System.out.println(temp);
+				preparedStatement.setString(5,temp) ;
+			}
+			if (currentFamily.marriageDate == null ) {
+				preparedStatement.setNull(6,Types.DATE);
+			}
+			else {
+				preparedStatement.setString(6,gedcomToSqlDate(currentFamily.marriageDate));
+			}
+			preparedStatement.setString(7,currentFamily.marriagePlace);
+			if (currentFamily.divorceDate == null ) {
+				preparedStatement.setNull(8,Types.DATE);
+			}
+			else {
+				preparedStatement.setString(8,gedcomToSqlDate(currentFamily.divorceDate));
+			}
+			preparedStatement.setString(9,currentFamily.divorcePlace);
+			preparedStatement.setString(10,currentFamily.comment);
+            preparedStatement.executeUpdate();				
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

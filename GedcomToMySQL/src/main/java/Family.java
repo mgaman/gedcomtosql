@@ -8,8 +8,8 @@ public class Family {
 	public int ref;   // primary key in table
 	public int father;
 	public int mother;
-	public enum eRL { OTHER,MARRIED,DIVORCE };
-	public eRL relationship = eRL.OTHER;
+	public enum eRL {Married,Divorced,Other};
+	public eRL relationship = eRL.Other;
 	public List children = new ArrayList();
 	public String marriageDate;
 	public String marriagePlace;

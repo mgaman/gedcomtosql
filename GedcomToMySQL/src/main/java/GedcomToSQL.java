@@ -2,15 +2,15 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.sql.Connection;
+//import java.sql.Connection;
 
-public class GedcomToMSQL {
+public class GedcomToSQL {
 
 	public static void main(String[] args) {
-		GedcomProcessor gedcom = new GedcomProcessor();
-		mySQLhandler mh = new mySQLhandler("10.0.0.3", "waterman", "qvwbenrm", "WaterMeter");
+		genericSQLhandler mh = new genericSQLhandler("10.0.0.3", "waterman", "qvwbenrm", "Family");
+		GedcomProcessor gedcom = new GedcomProcessor(mh);
 		try {
-			Connection con = mh.openDB();
+//			Connection con = mh.connectMySQL();
 			FileInputStream fstream = new FileInputStream("src/main/resources/transfer.ged");
 			// Get the object of DataInputStream
 			DataInputStream in = new DataInputStream(fstream);
