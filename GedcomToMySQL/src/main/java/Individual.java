@@ -15,19 +15,20 @@ public class Individual {
 	public String deathPlace;
 	public int parentFamily;
 	public List ownFamilies = new ArrayList();
-	public String gender;;
+	public enum eGender {Male,Female,Other};
+	public eGender gender;
 	public String comment; 
 	public enum eDP {UNKNOWN,BIRTH,DEATH};
 	public eDP addingTo = eDP.UNKNOWN;  // which field DATE/PLAC refers to
 	public void clear()
 	{
 		id = 0;
-		BirthFamilyName = birthDate = birthPlace = deathDate = deathPlace = comment = gender = null;
+		BirthFamilyName = birthDate = birthPlace = deathDate = deathPlace = comment = null;
 		parentFamily = 0;
 		OtherFamilyNames.clear();
 		ForeNames.clear();
 		ownFamilies.clear();
-		gender = null;
+		gender = eGender.Other;
 		addingTo = eDP.UNKNOWN;
 	}
 }

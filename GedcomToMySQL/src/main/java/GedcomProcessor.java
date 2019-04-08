@@ -218,7 +218,7 @@ public class GedcomProcessor {
 			// split firstname into an array
 			String [] fnames = names[0].split(" ");
 			// if field empty set both firstname and middlenames to empty
-			for (int i=1;i<fnames.length;i++)
+			for (int i=0;i<fnames.length;i++)
 				currentIndividual.ForeNames.add(fnames[i]);
 			if (names.length > 1)
 			{
@@ -288,8 +288,11 @@ public class GedcomProcessor {
 			currentIndividual.comment += " " + cont;			
 		}
 		else if (rest.startsWith("SEX")) {
-			String sex = rest.substring(rest.indexOf(" ")+1);	
-			currentIndividual.gender = sex;		
+			String sex = rest.substring(rest.indexOf(" ")+1);
+			if (sex.equals("M"))
+				currentIndividual.gender = Individual.eGender.Male;		
+			else if (sex.equals("F"))
+				currentIndividual.gender = Individual.eGender.Female;		
 		}
 		else
 			indErrors++;
@@ -377,8 +380,32 @@ public class GedcomProcessor {
 		System.out.println(famErrors + " family unprocessed");
 		System.out.println(indErrors + " indiv untreated");
 	}
+	/**
+	 * String data with embedded single quotes cause problems for SQL INSERT to each
+	 * single quote must be escaped with another single quote
+	 * @param s
+	 * @return
+	 */
+	private String escapeQuotes(String s) {
+		String reply = "";
+		if (s == null)
+			return null;
+		if (s.indexOf('\'') == -1)
+			reply = s;
+		else {
+			String remainder = s;
+			int ind = remainder.indexOf('\'');
+			while ( ind != -1) {
+				reply += remainder.substring(0,ind);
+				reply += "''";
+				remainder = remainder.substring(ind + 1);
+				ind = remainder.indexOf('\'');
+			}
+			reply += remainder;
+		}
+		return reply;
+	}
 	
-	void emitIndividual() {}
 	/*
 	 *  All JSON stuff here is just Json Array so we can make the string ourselves and insert that
 	 */
@@ -424,7 +451,79 @@ public class GedcomProcessor {
 			preparedStatement.setString(10,currentFamily.comment);
             preparedStatement.executeUpdate();				
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	void emitIndividual() {
+	    PreparedStatement preparedStatement = null;
+	    System.out.println(String.format("Indiv: %d",currentIndividual.id));
+	    String temp;
+	    int i;
+	    try {
+			preparedStatement = sqlHandler.connect.prepareStatement
+			        ("insert into Individual values (?,?,?,?,?,?,?,?,?,?,?,?)");
+			preparedStatement.setInt(1,currentIndividual.id);
+			
+			if (currentIndividual.BirthFamilyName.equals(null))
+				preparedStatement.setNull(2, Types.VARCHAR);
+			else
+				preparedStatement.setString(2, currentIndividual.BirthFamilyName);
+			
+			if (currentIndividual.OtherFamilyNames.size() == 0)
+				preparedStatement.setNull(3, Types.VARCHAR);
+			else {
+				temp = "[";
+				for (i=0;i<currentIndividual.OtherFamilyNames.size();i++) {
+					temp += String.format("\"%s\",", escapeQuotes((String)currentIndividual.OtherFamilyNames.get(i)));
+				}
+				temp = temp.substring(0,temp.length()-1) + "]";
+				preparedStatement.setString(3,temp);
+			}
+			
+			if (currentIndividual.ForeNames.size() == 0)
+				preparedStatement.setNull(4, Types.VARCHAR);
+			else {
+				temp = "[";
+				for (i=0;i<currentIndividual.ForeNames.size();i++) {
+					temp += String.format("\"%s\",", escapeQuotes((String)currentIndividual.ForeNames.get(i)));
+				}
+				temp = temp.substring(0,temp.length()-1) + "]";
+				preparedStatement.setString(4,temp);
+			}
+			
+	    	if (currentIndividual.birthDate == null)
+	    		preparedStatement.setNull(5, Types.DATE);
+	    	else
+	    		preparedStatement.setString(5, gedcomToSqlDate(currentIndividual.birthDate));
+	    	
+	    	preparedStatement.setString(6,currentIndividual.birthPlace);
+	    	
+	    	if (currentIndividual.deathDate == null)
+	    		preparedStatement.setNull(7, Types.DATE);
+	    	else
+	    		preparedStatement.setString(7, gedcomToSqlDate(currentIndividual.deathDate));
+	    	
+	    	preparedStatement.setString(8,currentIndividual.deathPlace);
+			
+	    	preparedStatement.setInt(9,currentIndividual.parentFamily);
+			
+	    	if (currentIndividual.ownFamilies.size()==0)
+				preparedStatement.setNull(10, Types.INTEGER);
+			else {
+				temp = "[";
+				for (i=0; i<currentIndividual.ownFamilies.size();i++) {
+					temp += currentIndividual.ownFamilies.get(i) + ",";
+					}
+				temp = temp.substring(0,temp.length()-1) + "]";
+				preparedStatement.setString(10,temp) ;	
+			}
+			
+	    	preparedStatement.setString(11,currentIndividual.gender.toString());
+			
+	    	preparedStatement.setString(12,currentIndividual.comment);
+            
+	    	preparedStatement.executeUpdate();					    		
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}

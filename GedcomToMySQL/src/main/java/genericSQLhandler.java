@@ -22,13 +22,9 @@ public class genericSQLhandler {
   //          Class.forName("com.mysql.jdbc.Driver");  // obsolete
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://" + srv + "/" + dbname + "?user=" + uname + "&password=" + pwd;
-            System.out.println(url);
-			connect = DriverManager
-//			        .getConnection("jdbc:mysql://10.0.0.3/feedback?"
-	//		                + "user=sqluser&password=sqluserpw");
-					.getConnection(url);
+//            System.out.println(url);
+			connect = DriverManager.getConnection(url);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			 return;
