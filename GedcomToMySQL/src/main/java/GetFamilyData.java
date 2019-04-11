@@ -8,7 +8,7 @@ import org.json.simple.parser.ParseException;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 
-public class GetGenerations {
+public class GetFamilyData {
 	genericSQLhandler sqlHandler;
 	public boolean debug;  // print statements
 	List<Integer> levelsCount ;  // count of entries at each level
@@ -16,7 +16,7 @@ public class GetGenerations {
 	int descendants = 0;
 	/*
 	 *  The database tables include arrays as json variables. As I have not
-	 *  yet learned the json syntax of mySQL I am doint stuff the long way
+	 *  yet learned the json syntax of mySQL I am doing stuff the long way
 	 */
 	private List<Long> getChildren(long head) {
 			String kids = null;
@@ -87,7 +87,7 @@ public class GetGenerations {
 			return lKids;
 	}
 			
-	public GetGenerations(genericSQLhandler gsh) {  // constructor
+	public GetFamilyData(genericSQLhandler gsh) {  // constructor
 		 sqlHandler = gsh;
 		 debug = false;
 		 levelsCount = new ArrayList<Integer>();
@@ -100,7 +100,7 @@ public class GetGenerations {
 		}
 	}
 	
-	public void getDescendants(long head, int level) {
+	public List<treeEntry> getDescendants(long head, int level) {
 		// dynamically grow list of levels
 		if (levelsCount.isEmpty() || levelsCount.size() < level+1)
 			levelsCount.add(0);
@@ -109,7 +109,8 @@ public class GetGenerations {
 		if (!kids.isEmpty()) {
 			int NewLevel = level+1;
 			for (int i=0; i< kids.size(); i++) {
-				System.out.println("ID " + kids.get(i) + ",Parent " + head + ",Level " + NewLevel);
+				if (debug)
+					System.out.println("ID " + kids.get(i) + ",Parent " + head + ",Level " + NewLevel);
 				treeEntry te = new treeEntry();
 				te.ID = kids.get(i);
 				te.parent = head;
@@ -118,9 +119,44 @@ public class GetGenerations {
 				descendants++;
 				getDescendants(kids.get(i),NewLevel);
 			}
-		}	
+		}
+		return nodes;
 	}
 
 	public void getAscendants(int start, int maxlevel) {
+	}
+	
+	public Individual getIndividual(long id) {
+		PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    Individual indiv = new Individual();
+	    JSONParser parser = new JSONParser();
+	    int i;
+	    
+		try {
+			preparedStatement = sqlHandler.connect.prepareStatement
+			        ("select * from Individual where id=?");
+			preparedStatement.setLong(1, id);
+	        resultSet = preparedStatement.executeQuery();
+	        while (resultSet.next()) {
+	        	indiv.id = resultSet.getInt("ID");
+	        	indiv.BirthFamilyName = resultSet.getString("BirthFamilyName");
+	        	String forenames = resultSet.getString("ForeNames");
+	        	// convert JSON to list
+   	         	Object obj = parser.parse(forenames);
+   	         	JSONArray array = (JSONArray)obj;
+   	         	for (i=0;i<array.size();i++) {
+   	        			indiv.ForeNames.add(array.get(i));
+   	         	}	        	
+	        }
+	        // copy data to the class instance
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return indiv;
 	}
 }
