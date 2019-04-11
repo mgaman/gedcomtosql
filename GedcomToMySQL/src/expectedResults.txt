@@ -1,0 +1,14 @@
+Expected output from getchildren(1,0);
+
+Opened database successfully
+ID 3,Parent 2,Level 1
+ID 879,Parent 3,Level 2
+ID 1119,Parent 3,Level 2
+ID 5,Parent 2,Level 1
+ID 1122,Parent 5,Level 2
+ID 1165,Parent 5,Level 2
+ID 1474,Parent 5,Level 2
+Total descendants 7
+Level 0,Count 1
+Level 1,Count 2
+Level 2,Count 5

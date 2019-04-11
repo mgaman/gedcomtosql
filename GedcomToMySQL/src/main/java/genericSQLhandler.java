@@ -30,4 +30,8 @@ public class genericSQLhandler {
 			 return;
 		}
 	}
+	
+	public void disconnectMySQL() throws Exception {
+		connect.close();
+	}
 }
