@@ -5,6 +5,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
+
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 
@@ -18,73 +19,22 @@ public class GetFamilyData {
 	 *  The database tables include arrays as json variables. As I have not
 	 *  yet learned the json syntax of mySQL I am doing stuff the long way
 	 */
+	@SuppressWarnings("unchecked")
 	private List<Long> getChildren(long head) {
-			String kids = null;
-			List<Long> lKids = new ArrayList<Long>();
-			List<Long> lRel = new ArrayList<Long>();
-			PreparedStatement preparedStatement = null;
-		    ResultSet familiesResultSet = null;
-		    ResultSet childrenResultSet = null;
-		    JSONParser parser = new JSONParser();
-		    int i,j;
-		    
-			try {
-				preparedStatement = sqlHandler.connect.prepareStatement
-				        ("select Relationships from Individual where id=?");
-				preparedStatement.setLong(1, head);
-	            familiesResultSet = preparedStatement.executeQuery();
-	            while (familiesResultSet.next()) {
-		            String families = familiesResultSet.getString("Relationships");
-		            if (families == null) {
-		            	if (debug) {
-		            		System.out.println(head + ": Relationships: None");
-		            	}		            	
-		            }
-		            else {
-		            	if (debug) {
-		            		System.out.println(head + ": Relationships: " + families);
-		            	}
-		   	         	Object obj = parser.parse(families);
-		   	         	JSONArray array = (JSONArray)obj;
-		   	         	for (i=0;i<array.size();i++) {
-		   	        			lRel.add((Long) array.get(i));
-		   	         	}
-			            // now we have relationships, go to relationship to get children
-		   	         	for (i=0;i<lRel.size();i++) {
-		   	         		preparedStatement = sqlHandler.connect.prepareStatement
-						        ("select children from Family where ID=?");
-		   	         		preparedStatement.setLong(1,lRel.get(i));
-		   	         		childrenResultSet = preparedStatement.executeQuery();
-		   		            while (childrenResultSet.next()) {
-		   			            String children = childrenResultSet.getString("children");
-		   			            if (children == null) {
-			   		            	if (debug) {
-			   		            		System.out.println(lRel.get(i) + ": Children: None");
-			   		            	}
-		   			            }
-		   			            else {
-			   		            	if (debug) {
-			   		            		System.out.println(lRel.get(i) + ": Children " + children);
-			   		            	}
-			   		   	         	Object obj2 = parser.parse(children);
-			   		   	         	JSONArray array2 = (JSONArray)obj2;
-			   		   	         	if (array2.size()>0)
-			   		   	         		for (j=0;j<array2.size();j++) {
-			   		   	         			lKids.add((Long) array2.get(j));
-			   		   	         	}
-		   			            }
-		   		            }
-		   	         	}
-		            }
-	            }
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-			return lKids;
+		List<Long> lKids = new ArrayList<Long>();
+	    Family tempFamily;
+	    Individual tempIndividual;
+	    int i;
+	    
+		tempIndividual = getIndividual(head);
+		if (tempIndividual.ownFamilies.size() > 0)
+		{
+         	for (i=0;i<tempIndividual.ownFamilies.size();i++) {
+         		tempFamily = getFamily((Long) tempIndividual.ownFamilies.get(i));
+         		lKids.addAll(tempFamily.children);
+         	}		   	         		
+   	     }
+		return lKids;
 	}
 			
 	public GetFamilyData(genericSQLhandler gsh) {  // constructor
@@ -147,7 +97,17 @@ public class GetFamilyData {
    	         	JSONArray array = (JSONArray)obj;
    	         	for (i=0;i<array.size();i++) {
    	        			indiv.ForeNames.add(array.get(i));
-   	         	}	        	
+   	         	}	
+   	         	indiv.gender = Individual.eGender.valueOf(resultSet.getString("Gender"));
+	        	String relationships = resultSet.getString("Relationships");
+	        	if (relationships != null) {
+		        	// convert JSON to list
+	   	         	Object obj2 = parser.parse(relationships);
+	   	         	JSONArray array2 = (JSONArray)obj2;
+	   	         	for (i=0;i<array2.size();i++) {
+	   	        			indiv.ownFamilies.add(array2.get(i));
+	   	         	}	
+	        	}
 	        }
 	        // copy data to the class instance
 		} catch (SQLException e) {
@@ -159,4 +119,77 @@ public class GetFamilyData {
 		}
         return indiv;
 	}
+	
+	public Individual.eGender getGender(long id) {
+		PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    Individual.eGender gender = Individual.eGender.OTHER; 
+	    try {
+	    	preparedStatement = sqlHandler.connect.prepareStatement
+			        ("select Gender from Individual where id=?");
+			preparedStatement.setLong(1, id);
+	        resultSet = preparedStatement.executeQuery();
+	        while (resultSet.next()) {
+	        	// jdbc doesnt support enums
+	        	gender = Individual.eGender.valueOf(resultSet.getString("Gender"));
+	        }
+	    }catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return gender;
+	}
+	public Family getFamily(long id) {
+		PreparedStatement preparedStatement = null;
+	    ResultSet resultSet = null;
+	    Family family = new Family();
+	    JSONParser parser = new JSONParser();
+		List<Long> lChildren = new ArrayList<Long>();
+	    int i,j;
+
+	    try {
+			preparedStatement = sqlHandler.connect.prepareStatement
+			        ("select * from Family where id=?");
+			preparedStatement.setLong(1, id);
+	        resultSet = preparedStatement.executeQuery();
+	        while (resultSet.next()) {
+	        	family.ref = resultSet.getInt("ID");
+	        	family.father = resultSet.getInt("father");
+	        	family.mother = resultSet.getInt("mother");
+	        	family.relationship = Family.eRL.valueOf(resultSet.getString("relationship"));
+	            String children = resultSet.getString("children");
+	            if (children == null) {
+	            	if (debug) {
+	            		System.out.println("ID: " + id + " Children: None");
+	            	}
+	            }
+	            else {
+	            	if (debug) {
+	            		System.out.println("ID: " + id + ": Children " + children);
+	            	}
+	   	         	Object obj = parser.parse(children);
+	   	         	JSONArray array = (JSONArray)obj;
+	   	         	if (array.size()>0) {
+	   	         		
+	   	         		for (j=0;j<array.size();j++) {
+	   	         			lChildren.add((Long) array.get(j));
+		   	         	}
+	   	         		family.children = lChildren;
+	   	         	}
+	            }
+	        }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	    return family;
+	}
+	public Family.eRL getRelationship(long id) {
+		return null;
+	}
+
 }

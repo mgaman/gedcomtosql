@@ -290,9 +290,9 @@ public class GedcomProcessor {
 		else if (rest.startsWith("SEX")) {
 			String sex = rest.substring(rest.indexOf(" ")+1);
 			if (sex.equals("M"))
-				currentIndividual.gender = Individual.eGender.Male;		
+				currentIndividual.gender = Individual.eGender.MALE;		
 			else if (sex.equals("F"))
-				currentIndividual.gender = Individual.eGender.Female;		
+				currentIndividual.gender = Individual.eGender.FEMALE;		
 		}
 		else
 			indErrors++;
@@ -328,7 +328,7 @@ public class GedcomProcessor {
 		}
 		else if (rs.startsWith("MARR"))
 		{
-			currentFamily.relationship = Family.eRL.Married;
+			currentFamily.relationship = Family.eRL.MARRIED;
 			currentFamily.addingTo = Family.eDP.MARRIAGE;
 		}
 		else if (rs.startsWith("DATE"))
@@ -420,7 +420,7 @@ public class GedcomProcessor {
 			preparedStatement.setInt(1, currentFamily.ref);
 			preparedStatement.setInt(2, currentFamily.father);
 			preparedStatement.setInt(3, currentFamily.mother);
-			preparedStatement.setString(4,"Married") ;
+			preparedStatement.setString(4,"MARRIED");   // default for now
 			if (currentFamily.children.size() == 0)
 			{
 				preparedStatement.setNull(5, Types.VARCHAR);

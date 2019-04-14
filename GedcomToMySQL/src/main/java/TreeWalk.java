@@ -9,7 +9,19 @@ public class TreeWalk {
 		GetFamilyData gg = new GetFamilyData(mh);
 //		gg.debug = true;
 		Individual indiv;
-		List<treeEntry> allKids = gg.getDescendants(11,0);
+		Family family;
+		long head = 11;
+		// display the top of the tree
+		indiv = gg.getIndividual(head);
+		if (gg.debug) {
+			System.out.println(String.format("Individual ID %d %s %s %s",
+					indiv.id,indiv.ForeNames.get(0),indiv.BirthFamilyName,indiv.gender));
+			family = gg.getFamily(1);
+			System.out.println(String.format("Family ID %d father %d mother %d",
+					family.ref,family.father,family.mother));	
+		}
+		List<treeEntry> allKids = gg.getDescendants(head,0);
+		
 		try {
 			if (allKids.size()>0)
 				for (int i=0;i<allKids.size();i++) {
@@ -18,8 +30,8 @@ public class TreeWalk {
 					indiv = gg.getIndividual(allKids.get(i).ID);
 					for (int j=0;j<allKids.get(i).level;j++)
 						System.out.print("-");
-					System.out.println(String.format("%s %s",
-							indiv.ForeNames.get(0),indiv.BirthFamilyName));
+					System.out.println(String.format("%s %s %s",
+							indiv.ForeNames.get(0),indiv.BirthFamilyName,indiv.gender));
 				}
 			mh.disconnectMySQL();
 			System.out.println("DB Closed");

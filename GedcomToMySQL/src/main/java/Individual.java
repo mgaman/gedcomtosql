@@ -15,7 +15,7 @@ public class Individual {
 	public String deathPlace;
 	public int parentFamily;
 	public List ownFamilies = new ArrayList();
-	public enum eGender {Male,Female,Other};
+	public enum eGender {MALE,FEMALE,OTHER};  // Must correspond with companion column in database table
 	public eGender gender;
 	public String comment; 
 	public enum eDP {UNKNOWN,BIRTH,DEATH};
@@ -28,7 +28,7 @@ public class Individual {
 		OtherFamilyNames.clear();
 		ForeNames.clear();
 		ownFamilies.clear();
-		gender = eGender.Other;
+		gender = eGender.OTHER;
 		addingTo = eDP.UNKNOWN;
 	}
 }
