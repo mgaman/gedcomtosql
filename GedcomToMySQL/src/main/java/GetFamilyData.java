@@ -2,12 +2,10 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONArray;
 
 public class GetFamilyData {
 	genericSQLhandler sqlHandler;
